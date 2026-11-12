@@ -26,8 +26,8 @@
 
 
 # Install: pip install scapy
-import argparse, time
-from scapy.all import sniff, ARP, rdpcap
+import argparse
+from scapy.all import sniff, ARP
 
 ip_map = {}
 
@@ -44,17 +44,13 @@ def check(pkt):
     ip_map[ip] = mac
 
 parser = argparse.ArgumentParser()
-group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument("--iface")
-group.add_argument("--pcap")
+# Made --iface a standard required argument
+parser.add_argument("--iface", required=True)
 args = parser.parse_args()
 
-if args.pcap:
-    for pkt in rdpcap(args.pcap):
-        check(pkt)
-else:
-    try:
-        sniff(iface=args.iface, filter="arp", prn=check, store=False)
-    except KeyboardInterrupt:
-        print("Stopped.")
+try:
+    sniff(iface=args.iface, filter="arp", prn=check, store=False)
+    print("Stopped.")
+except KeyboardInterrupt:
+    print("Stopped.")
 
