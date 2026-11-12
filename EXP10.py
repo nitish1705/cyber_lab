@@ -23,3 +23,4 @@ def check(p):
                 syn[ip, port] = 0
 
 sniff(filter="arp or tcp", prn=check, store=False)
+
